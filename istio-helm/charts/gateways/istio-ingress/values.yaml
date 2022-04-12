@@ -7,7 +7,6 @@ gateways:
     labels:
       app: istio-ingressgateway
       istio: ingressgateway
-      app.kubernetes.io/part-of: "curiefense"
     ports:
     ## You can add custom gateway ports in user values overrides, but it must include those ports since helm replaces.
     # Note that AWS ELB will by default perform health checks on the first port
@@ -25,20 +24,8 @@ gateways:
       targetPort: 8443
       name: https
       protocol: TCP
-    - port: 15012
-      targetPort: 15012
-      name: tcp-istiod
-      protocol: TCP
-    # This is the port where sni routing happens
-    - port: 15443
-      targetPort: 15443
-      name: tls
-      protocol: TCP
 
-    waf:
-      enabled: false
-
-    # Scalability tunning
+    # Scalability tuning
     # replicaCount: 1
     rollingMaxSurge: 100%
     rollingMaxUnavailable: 25%
@@ -55,16 +42,11 @@ gateways:
         memory: 128Mi
       limits:
         cpu: 2000m
-        memory: 2048Mi
+        memory: 1024Mi
 
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     serviceAnnotations: {}
-
-    # Enable cross-cluster access using SNI matching
-    zvpn:
-      enabled: false
-      suffix: global
 
     # To generate an internal load balancer:
     # --set serviceAnnotations.cloud.google.com/load-balancer-type=internal
@@ -90,13 +72,12 @@ gateways:
     additionalContainers: []
     configVolumes: []
 
-    ### Advanced options ############
-    env:
-      # A gateway with this mode ensures that pilot generates an additional
-      # set of clusters for internal services but without Istio mTLS, to
-      # enable cross cluster routing.
-      ISTIO_META_ROUTER_MODE: "standard"
+    serviceAccount:
+      # Annotations to add to the service account
+      annotations: {}
 
+    ### Advanced options ############
+    env: {}
     nodeSelector: {}
     tolerations: []
 
@@ -178,7 +159,7 @@ global:
   hub: docker.io/istio
 
   # Default tag for Istio images.
-  tag: 1.9.3
+  tag: 1.13.2
 
   # Specify image pull policy if default behavior isn't desired.
   # Default behavior: latest images will be Always else IfNotPresent.
@@ -195,7 +176,7 @@ global:
   # To output all istio components logs in json format by adding --log_as_json argument to each container argument
   logAsJson: false
 
-  # Specify pod scheduling arch(amd64, ppc64le, s390x) and weight as follows:
+  # Specify pod scheduling arch(amd64, ppc64le, s390x, arm64) and weight as follows:
   #   0 - Never scheduled
   #   1 - Least preferred
   #   2 - No preference
@@ -204,6 +185,7 @@ global:
     amd64: 2
     s390x: 2
     ppc64le: 2
+    arm64: 2
 
   # Comma-separated minimum per-scope logging level of messages to output, in the form of <scope>:<level>,<scope>:<level>
   # The control plane has different scopes depending on component, but can configure default log level across all components
@@ -235,23 +217,6 @@ global:
     # Log level for proxy, applies to gateways and sidecars.
     # Expected values are: trace|debug|info|warning|error|critical|off
     logLevel: warning
-    gw_image: curiefense/curieproxy-istio
-    curiesync_image: curiefense/curiesync
-    curieconf_manifest_url: "s3://curiefense-test01/prod/manifest.json"
-    # allowed values: "s3", "gs", "local-bucket", "minio"
-    curiefense_bucket_type: "s3"
-    # minio hostname and port, when curiefense_bucket_type is minio
-    curiefense_minio_host: "minio.curiefense:9000"
-    # set to true to disable TLS for minio, for testing environments
-    curiefense_minio_insecure: false
-    # namespace where curiefense components are running (redis, curielogger)
-    curiefense_namespace: "curiefense"
-    # typically "redis.$curiefense_namespace", can be changed to use an external redis instance
-    redis_host: "redis.curiefense"
-    redis_port: 6379
-    # valid values: true  = pull initial config from bucket then start gateway
-    #               false = start gateway with a bootstrap config without waiting for the config from the bucket
-    initial_curieconf_pull: true
 
   ##############################################################################################
   # The following values are found in other charts. To effectively modify these values, make   #
@@ -331,11 +296,14 @@ global:
     # Setting this port to a non-zero value enables STS server.
     servicePort: 0
 
-  # Deprecated, use meshConfig.trustDomain
-  trustDomain: ""
 
 meshConfig:
   enablePrometheusMerge: true
+
+  # The trust domain corresponds to the trust root of a system
+  # Refer to https://github.com/spiffe/spiffe/blob/master/standards/SPIFFE-ID.md#21-trust-domain
+  trustDomain: "cluster.local"
+
   defaultConfig:
     proxyMetadata: {}
     tracing:
