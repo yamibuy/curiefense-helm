@@ -69,7 +69,7 @@ gateways:
       mountPath: /etc/istio/ingressgateway-ca-certs
 
     customService: false
-    externalTrafficPolicy: ""
+    externalTrafficPolicy: "Local"
 
     ingressPorts: []
     additionalContainers: []
