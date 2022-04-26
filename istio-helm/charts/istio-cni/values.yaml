@@ -19,6 +19,7 @@ cni:
 
   excludeNamespaces:
     - istio-system
+    - kube-system
 
   # Custom annotations on pod level, if you need them
   podAnnotations: {}
@@ -33,6 +34,9 @@ cni:
   # Some k8s flavors (e.g. OpenShift) do not support the chain approach, set to false if this is the case
   chained: true
 
+  # Allow the istio-cni container to run in privileged mode, needed for some platforms (e.g. OpenShift)
+  privileged: false
+
   repair:
     enabled: true
     hub: ""
@@ -46,9 +50,18 @@ cni:
     brokenPodLabelKey: "cni.istio.io/uninitialized"
     brokenPodLabelValue: "true"
 
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
   # Experimental taint controller for further race condition mitigation
   taint:
     enabled: false
+  
+  resourceQuotas:
+    enabled: false
+    pods: 5000
 
 # Revision is set as 'version' label and part of the resource names when installing multiple control planes.
 revision: ""
@@ -63,7 +76,7 @@ global:
   hub: docker.io/istio
 
   # Default tag for Istio images.
-  tag: 1.9.2
+  tag: 1.13.2
 
   # Specify image pull policy if default behavior isn't desired.
   # Default behavior: latest images will be Always else IfNotPresent.
@@ -76,3 +89,9 @@ global:
   # Must be set for any cluster configured with private docker registry.
   imagePullSecrets: []
   # - private-registry-key
+
+  # Default resources allocated
+  defaultResources:
+     requests:
+       cpu: 100m
+       memory: 100Mi
