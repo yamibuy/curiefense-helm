@@ -10,7 +10,6 @@ global:
   images:
     confserver: curiefense/confserver
     curielogger: curiefense/curielogger
-    curietasker: curiefense/curietasker
     redis: curiefense/redis
     uiserver: curiefense/uiserver
     grafana: curiefense/grafana
@@ -66,7 +65,6 @@ global:
       confserver_init: "100m"
       confserver_nginx: "10m"
       confserver_uwsgi: "100m"
-      curietasker: "100m"
       prometheus: "100m"
       grafana: "20m"
       elasticsearch: "1"
