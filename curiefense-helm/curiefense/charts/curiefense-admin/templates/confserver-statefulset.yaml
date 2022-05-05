@@ -46,45 +46,6 @@ spec:
               cpu: {{ .Values.global.requests.cpu.confserver_init }}
 
       containers:
-      - name: confserver-nginx
-        env:
-        - name: BOOTSTRAP_BUCKET_ON_STARTUP
-          value: "yes"
-        - name: CURIE_BUCKET_LINK
-          value: {{ .Values.global.settings.curieconf_manifest_url }}
-{{- if eq .Values.global.settings.curiefense_bucket_type "minio" }}
-        - name: CURIE_MINIO_HOST
-          value: {{ .Values.global.settings.curiefense_minio_host }}
-{{- if .Values.global.settings.curiefense_minio_insecure }}
-        - name: CURIE_MINIO_SECURE
-          value: "FALSE"
-{{- end }}
-{{- end }}
-        {{ if regexMatch ".*/.*:" .Values.global.images.confserver }}
-        {{/* The image name contains a version tag (e.g. for tests), do not append docker_tag */}}
-        image: {{ .Values.global.images.confserver }}
-        {{ else }}
-        image: {{ .Values.global.images.confserver }}:{{ .Values.global.settings.docker_tag }}
-        {{ end }}
-        command: ["/usr/bin/dumb-init", "/bin/bash", "/init/start_nginx.sh"]
-        ports:
-        - containerPort: 80
-          name: confserver-http
-        livenessProbe:
-          httpGet:
-            path: /api/v1/
-            port: confserver-http
-        volumeMounts:
-        - mountPath: /uwsgi
-          name: uwsgi-socket
-        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
-        resources:
-          limits:
-            memory: "500Mi"
-            cpu: "500m"
-          requests:
-            memory: "10Mi"
-            cpu: {{ .Values.global.requests.cpu.confserver_nginx }}
       - name: confserver-uwsgi
         env:
         - name: CURIE_BUCKET_LINK
@@ -104,8 +65,6 @@ spec:
         image: {{ .Values.global.images.confserver }}:{{ .Values.global.settings.docker_tag }}
         {{ end }}
         volumeMounts:
-        - mountPath: /uwsgi
-          name: uwsgi-socket
 {{- if eq .Values.global.settings.curiefense_bucket_type "s3" }}
         - mountPath: /run/secrets/s3cfg
           name: s3cfg
@@ -132,7 +91,6 @@ spec:
           requests:
             memory: "100Mi"
             cpu: {{ .Values.global.requests.cpu.confserver_uwsgi }}
-        command: ["/usr/bin/dumb-init", "/bin/bash", "/init/start_uwsgi.sh"]
       restartPolicy: Always
       serviceAccountName: ""
       imagePullSecrets:
@@ -168,8 +126,6 @@ spec:
             path: miniocfg
           secretName: miniocfg
 {{- end }}
-      - name: uwsgi-socket
-        emptyDir: {}
 {{- if .Values.global.tolerations }}
       tolerations:
 {{ toYaml .Values.global.tolerations | indent 8 }}
