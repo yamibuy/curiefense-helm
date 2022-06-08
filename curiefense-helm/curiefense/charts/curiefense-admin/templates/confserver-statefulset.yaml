@@ -48,6 +48,8 @@ spec:
       containers:
       - name: confserver-uwsgi
         env:
+        - name: BOOTSTRAP_BUCKET_ON_STARTUP
+          value: "yes"
         - name: CURIE_BUCKET_LINK
           value: {{ .Values.global.settings.curieconf_manifest_url }}
 {{- if eq .Values.global.settings.curiefense_bucket_type "minio" }}
