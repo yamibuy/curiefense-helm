@@ -37,15 +37,19 @@ spec:
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         resources:
           limits:
-            memory: "500Mi"
-            cpu: "900m"
+            memory: "1Gi"
+            cpu: "1000m"
           requests:
-            memory: "10Mi"
+            memory: "200Mi"
             cpu: {{ .Values.global.requests.cpu.uiserver }}
       restartPolicy: Always
       imagePullSecrets:
         {{- .Values.global.imagePullSecrets | toYaml | nindent 8  }}
       serviceAccountName: ""
+{{- if .Values.global.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
 {{- if .Values.global.tolerations }}
       tolerations:
 {{ toYaml .Values.global.tolerations | indent 8 }}

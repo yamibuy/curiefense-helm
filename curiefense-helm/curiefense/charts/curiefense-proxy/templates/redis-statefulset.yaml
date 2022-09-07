@@ -41,13 +41,17 @@ spec:
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         resources:
           limits:
-            memory: "1Gi"
-            cpu: "900m"
+            memory: "8Gi"
+            cpu: "2000m"
           requests:
-            memory: "20Mi"
+            memory: "4Gi"
             cpu: {{ .Values.global.requests.cpu.redis }}
       restartPolicy: Always
       serviceAccountName: ""
+{{- if .Values.global.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
 {{- if .Values.global.tolerations }}
       tolerations:
 {{ toYaml .Values.global.tolerations | indent 8 }}

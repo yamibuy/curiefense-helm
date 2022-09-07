@@ -39,10 +39,10 @@ spec:
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
             limits:
-              memory: "500Mi"
+              memory: "1Gi"
               cpu: "1"
             requests:
-              memory: "100Mi"
+              memory: "200Mi"
               cpu: {{ .Values.global.requests.cpu.confserver_init }}
 
       containers:
@@ -88,10 +88,10 @@ spec:
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         resources:
           limits:
-            memory: "500Mi"
-            cpu: "500m"
+            memory: "1Gi"
+            cpu: "1000m"
           requests:
-            memory: "100Mi"
+            memory: "200Mi"
             cpu: {{ .Values.global.requests.cpu.confserver_uwsgi }}
       restartPolicy: Always
       serviceAccountName: ""
@@ -127,6 +127,10 @@ spec:
           - key: miniocfg
             path: miniocfg
           secretName: miniocfg
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
 {{- end }}
 {{- if .Values.global.tolerations }}
       tolerations:
