@@ -9,7 +9,7 @@ output.elasticsearch:
 
 setup.dashboards:
   enabled: false
-  index: "curieaccesslog-*"
+  index: "yami-curieaccesslog-*"
   retry:
     enabled: false
 
@@ -18,10 +18,10 @@ setup.kibana:
 
 setup.ilm:
   enabled: true
-  rollover_alias: "curieaccesslog"
+  rollover_alias: "yami-curieaccesslog"
   pattern: "{now/d}-000001"
   overwrite: true
-  policy_name: "curieaccesslog"
+  policy_name: "yami-curieaccesslog"
   policy_file: /usr/share/filebeat/ilm.json
 
 
@@ -31,4 +31,4 @@ setup.template:
   type: "index"
   json.enabled: true
   json.path: "/usr/share/filebeat/template.json"
-  json.name: "curieaccesslog"
+  json.name: "yami-curieaccesslog"
