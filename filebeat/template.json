@@ -16,7 +16,16 @@
           }
         },
         "mappings": {
-          "dynamic_templates": [],
+          "dynamic_templates": [
+            {
+              "headers_template": {
+                "path_match": "request.headers.*",
+                "mapping": {
+                  "type": "text"
+                }
+              }
+            }
+          ],          
           "properties": {
             "authority": {
               "type": "keyword"
@@ -129,7 +138,12 @@
                   "type": "flattened"
                 },
                 "headers": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "y_version": {
+                      "type": "integer"
+                    }
+                  }
                 },
                 "headersbytes": {
                   "type": "integer"
