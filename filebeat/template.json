@@ -20,12 +20,21 @@
             {
               "headers_template": {
                 "path_match": "request.headers.*",
+                "path_unmatch": "request.headers.y_version",
                 "mapping": {
                   "type": "text"
                 }
               }
+            },
+            {
+              "headers_integer_template": {
+                "path_match": "request.headers.y_version",
+                "mapping": {
+                  "type": "integer"
+                }
+              }
             }
-          ],          
+          ],         
           "properties": {
             "authority": {
               "type": "keyword"
@@ -136,14 +145,6 @@
                 },
                 "cookies": {
                   "type": "flattened"
-                },
-                "headers": {
-                  "type": "object",
-                  "properties": {
-                    "y_version": {
-                      "type": "integer"
-                    }
-                  }
                 },
                 "headersbytes": {
                   "type": "integer"
