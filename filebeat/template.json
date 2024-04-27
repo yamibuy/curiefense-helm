@@ -1,599 +1,787 @@
 {
-    "index_patterns": ["yami-curieaccesslog-*"],
-    "version": 1,
-    "priority": 200,
-    "composed_of": [],
-    "_meta": {
-      "description": "Curiefense's index template "
+  "index_patterns": ["yami-curieaccesslog-*"],
+  "version": 1,
+  "priority": 200,
+  "composed_of": [],
+  "_meta": {
+    "description": "Curiefense's index template "
+  },
+  "template": {
+    "settings": {
+      "index": {
+        "lifecycle": {
+          "name": "yami-curieaccesslog",
+          "rollover_alias": "yami-curieaccesslog"
+        }
+      }
     },
-    "template": {
-      "settings": {
-        "index": {
-          "lifecycle": {
-            "name": "yami-curieaccesslog",
-            "rollover_alias": "yami-curieaccesslog"
-          }
-        }
-      },
-      "mappings": {
-        "dynamic_templates": [],         
-        "properties": {
-          "authority": {
-            "type": "keyword"
-          },
-          "block_reason": {
-            "type": "object"
-          },
-          "blocked": {
-            "type": "boolean"
-          },
-          "downstream": {
-            "properties": {
-              "connectiontermination": {
-                "type": "boolean"
-              },
-              "directremoteaddress": {
-                "type": "ip"
-              },
-              "directremoteaddressport": {
-                "type": "integer"
-              },
-              "localaddress": {
-                "type": "ip"
-              },
-              "localaddressport": {
-                "type": "integer"
-              },
-              "protocolerror": {
-                "type": "boolean"
-              },
-              "remoteaddress": {
-                "type": "ip"
-              },
-              "remoteaddressport": {
-                "type": "integer"
-              }
-            }
-          },
-          "metadata": {
-            "properties": {
-              "delayinjected": {
-                "type": "boolean"
-              },
-              "failedlocalhealthcheck": {
-                "type": "boolean"
-              },
-              "faultinjected": {
-                "type": "boolean"
-              },
-              "invalidenvoyrequestheaders": {
-                "type": "boolean"
-              },
-              "localreset": {
-                "type": "boolean"
-              },
-              "nohealthyupstream": {
-                "type": "boolean"
-              },
-              "noroutefound": {
-                "type": "boolean"
-              },
-              "ratelimited": {
-                "type": "boolean"
-              },
-              "ratelimitserviceerror": {
-                "type": "boolean"
-              },
-              "routename": {
-                "type": "keyword"
-              },
-              "samplerate": {
-                "type": "float"
-              },
-              "streamidletimeout": {
-                "type": "boolean"
-              },
-              "unauthorizeddetails": {
-                "type": "keyword"
-              }
-            }
-          },
-          "request": {
-            "properties": {
-              "requestid": {
-                "type": "keyword"
-              },
-              "scheme": {
-                "type": "keyword"
-              },
-              "geo": {
-                "type": "object",
-                "properties": {
-                  "location": {
-                    "type": "geo_point",
-                    "ignore_malformed": true,
-                    "ignore_z_value": true
-                  }
+    "mappings": {
+      "dynamic": false,         
+      "properties": {
+        "authority": {
+          "type": "keyword"
+        },
+        "block_reason" : {
+          "properties" : {
+            "action" : {
+              "type" : "long"
+            },
+            "initiator" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
                 }
-              },
-              "arguments": {
-                "type": "flattened"
-              },
-              "attributes": {
-                "type": "object"
-              },
-              "bodybytes": {
-                "type": "integer"
-              },
-              "cookies": {
-                "type": "flattened"
-              },
-              "headers": {
-                "properties": {
-                  "accept": {
-                    "type": "text"
-                  },
-                  "accept-charset": {
-                    "type": "text"
-                  },
-                  "accept-encoding": {
-                    "type": "text"
-                  },
-                  "accept-language": {
-                    "type": "text"
-                  },
-                  "apisign_verify_response": {
-                    "type": "text"
-                  },
-                  "cache-control": {
-                    "type": "text"
-                  },
-                  "cf-connecting-ip": {
-                    "type": "text"
-                  },
-                  "channel": {
-                    "type": "text"
-                  },
-                  "connection": {
-                    "type": "text"
-                  },
-                  "content-length": {
-                    "type": "text"
-                  },
-                  "content-type": {
-                    "type": "text"
-                  },
-                  "device_id": {
-                    "type": "text"
-                  },
-                  "dispatch_header": {
-                    "type": "text"
-                  },
-                  "from": {
-                    "type": "text"
-                  },
-                  "host": {
-                    "type": "text"
-                  },
-                  "if-modified-since": {
-                    "type": "text"
-                  },
-                  "if-none-match": {
-                    "type": "text"
-                  },
-                  "ignore_ym_http_error_all": {
-                    "type": "text"
-                  },
-                  "is_new_visitor": {
-                    "type": "text"
-                  },
-                  "lang": {
-                    "type": "text"
-                  },
-                  "language": {
-                    "type": "text"
-                  },
-                  "network_type": {
-                    "type": "text"
-                  },
-                  "now": {
-                    "type": "text"
-                  },
-                  "origin": {
-                    "type": "text"
-                  },
-                  "platform": {
-                    "type": "text"
-                  },
-                  "postman-token": {
-                    "type": "text"
-                  },
-                  "pragma": {
-                    "type": "text"
-                  },
-                  "priority": {
-                    "type": "text"
-                  },
-                  "proxy-authorization": {
-                    "type": "text"
-                  },
-                  "proxy-connection": {
-                    "type": "text"
-                  },
-                  "purpose": {
-                    "type": "text"
-                  },
-                  "referer": {
-                    "type": "text"
-                  },
-                  "searchpagetype": {
-                    "type": "text"
-                  },
-                  "sec-ch-ua": {
-                    "type": "text"
-                  },
-                  "clientip": {
-                    "type": "text"
-                  },
-                  "client-ip": {
-                    "type": "text"
-                  },
-                  "sec-ch-ua-mobile": {
-                    "type": "text"
-                  },
-                  "sec-ch-ua-platform": {
-                    "type": "text"
-                  },
-                  "sec-fetch-dest": {
-                    "type": "text"
-                  },
-                  "sec-fetch-mode": {
-                    "type": "text"
-                  },
-                  "sec-fetch-site": {
-                    "type": "text"
-                  },
-                  "sec-fetch-user": {
-                    "type": "text"
-                  },
-                  "sec-gpc": {
-                    "type": "text"
-                  },
-                  "seller_id": {
-                    "type": "text"
-                  },
-                  "sign": {
-                    "type": "text"
-                  },
-                  "source_flag": {
-                    "type": "text"
-                  },
-                  "stripe-signature": {
-                    "type": "text"
-                  },
-                  "token": {
-                    "type": "text"
-                  },
-                  "traceparent": {
-                    "type": "text"
-                  },
-                  "tracestate": {
-                    "type": "text"
-                  },
-                  "upgrade-insecure-requests": {
-                    "type": "text"
-                  },
-                  "user-agent": {
-                    "type": "text"
-                  },
-                  "ym_id": {
-                    "type": "text"
-                  },
-                  "x-af-id": {
-                    "type": "text"
-                  },
-                  "x-android-id": {
-                    "type": "text"
-                  },
-                  "x-app-name": {
-                    "type": "text"
-                  },
-                  "x-app-package-name": {
-                    "type": "text"
-                  },
-                  "x-app-signature": {
-                    "type": "text"
-                  },
-                  "x-app-type": {
-                    "type": "text"
-                  },
-                  "x-app-type-v2": {
-                    "type": "text"
-                  },
-                  "x-app-version": {
-                    "type": "text"
-                  },
-                  "x-app-version-name": {
-                    "type": "text"
-                  },
-                  "x-bd-quic": {
-                    "type": "text"
-                  },
-                  "x-battery": {
-                    "type": "text"
-                  },
-                  "x-backup-type": {
-                    "type": "text"
-                  },
-                  "x-b3-traceid": {
-                    "type": "text"
-                  },
-                  "x-b3-spanid": {
-                    "type": "text"
-                  },
-                  "x-b3-sampled": {
-                    "type": "text"
-                  },
-                  "x-b3-parentspanid": {
-                    "type": "text"
-                  },
-                  "x-b3-flags": {
-                    "type": "text"
-                  },
-                  "x-bd-traceid": {
-                    "type": "text"
-                  },
-                  "x-bdboxapp-netengine": {
-                    "type": "text"
-                  },
-                  "x-boot-ts": {
-                    "type": "text"
-                  },
-                  "x-brand": {
-                    "type": "text"
-                  },
-                  "x-brightness": {
-                    "type": "text"
-                  },
-                  "x-client-ts": {
-                    "type": "text"
-                  },
-                  "x-country": {
-                    "type": "text"
-                  },
-                  "x-cuid": {
-                    "type": "text"
-                  },
-                  "x-dark-mode": {
-                    "type": "text"
-                  },
-                  "x-datadog-parent-id": {
-                    "type": "text"
-                  },
-                  "x-datadog-sampling-priority": {
-                    "type": "text"
-                  },
-                  "x-datadog-tags": {
-                    "type": "text"
-                  },
-                  "x-datadog-trace-id": {
-                    "type": "text"
-                  },
-                  "x-forwarded-for": {
-                    "type": "text"
-                  },
-                  "x-from-h3-trnet": {
-                    "type": "text"
-                  },
-                  "x-ga-id": {
-                    "type": "text"
-                  },
-                  "x-gp-available": {
-                    "type": "text"
-                  },
-                  "x-language": {
-                    "type": "text"
-                  },
-                  "x-model": {
-                    "type": "text"
-                  },
-                  "x-network-state": {
-                    "type": "text"
-                  },
-                  "x-os-version": {
-                    "type": "text"
-                  },
-                  "x-playstore": {
-                    "type": "text"
-                  },
-                  "x-real-ip": {
-                    "type": "text"
-                  },
-                  "x-referrer": {
-                    "type": "text"
-                  },
-                  "x-request-id": {
-                    "type": "text"
-                  },
-                  "x-requested-with": {
-                    "type": "text"
-                  },
-                  "x-sdk": {
-                    "type": "text"
-                  },
-                  "x-sim-operator": {
-                    "type": "text"
-                  },
-                  "x-sk": {
-                    "type": "text"
-                  },
-                  "x-t5-auth": {
-                    "type": "text"
-                  },
-                  "x-turbonet-info": {
-                    "type": "text"
-                  },
-                  "x-ucbrowser-ua": {
-                    "type": "text"
-                  },
-                  "x-wap-profile": {
-                    "type": "text"
-                  },
-                  "x-xsrf-token": {
-                    "type": "text"
-                  },
-                  "y_language": {
-                    "type": "text"
-                  },
-                  "y_nonce": {
-                    "type": "text"
-                  },
-                  "y_platform": {
-                    "type": "text"
-                  },
-                  "y_secretid": {
-                    "type": "text"
-                  },
-                  "y_signature": {
-                    "type": "text"
-                  },
-                  "y_timestamp": {
-                    "type": "text"
-                  },
-                  "y_timezone": {
-                    "type": "text"
-                  },
-                  "zeus-pagetype": {
-                    "type": "text"
-                  },
-                  "y_version": {
-                    "type": "integer"
-                  }
+              }
+            },
+            "name" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
                 }
-              },
-              "headersbytes": {
-                "type": "integer"
-              },
-              "originalpath": {
-                "type": "keyword"
               }
-            }
-          },
-          "response": {
-            "properties": {
-              "bodybytes": {
-                "type": "integer"
-              },
-              "code": {
-                "type": "integer"
-              },
-              "codedetails": {
-                "type": "keyword"
-              },
-              "headers": {
-                "type": "flattened"
-              },
-              "headersbytes": {
-                "type": "integer"
-              },
-              "trailers": {
-                "type": "keyword"
+            },
+            "reason" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
               }
-            }
-          },
-          "rxtimers": {
-            "properties": {
-              "firstupstreambyte": {
-                "type": "float"
-              },
-              "lastbyte": {
-                "type": "float"
-              },
-              "lastupstreambyte": {
-                "type": "float"
-              }
-            }
-          },
-          "tags": {
-            "type": "keyword"
-          },
-          "@timestamp": {
-            "type": "date_nanos"
-          },
-          "tls": {
-            "properties": {
-              "ciphersuite": {
-                "type": "keyword"
-              },
-              "sessionid": {
-                "type": "keyword"
-              },
-              "snihostname": {
-                "type": "keyword"
-              },
-              "version": {
-                "type": "keyword"
-              }
-            }
-          },
-          "txtimers": {
-            "properties": {
-              "firstdownstreambyte": {
-                "type": "float"
-              },
-              "firstupstreambyte": {
-                "type": "float"
-              },
-              "lastdownstreambyte": {
-                "type": "float"
-              },
-              "lastupstreambyte": {
-                "type": "float"
-              }
-            }
-          },
-          "upstream": {
-            "properties": {
-              "cluster": {
-                "type": "keyword"
-              },
-              "connectionfailure": {
-                "type": "boolean"
-              },
-              "connectiontermination": {
-                "type": "boolean"
-              },
-              "localaddress": {
-                "type": "ip"
-              },
-              "localaddressport": {
-                "type": "integer"
-              },
-              "overflow": {
-                "type": "boolean"
-              },
-              "remoteaddress": {
-                "type": "ip"
-              },
-              "remoteaddressport": {
-                "type": "integer"
-              },
-              "remotereset": {
-                "type": "boolean"
-              },
-              "requesttimeout": {
-                "type": "boolean"
-              },
-              "retrylimitexceeded": {
-                "type": "boolean"
-              },
-              "transportfailurereason": {
-                "type": "keyword"
+            },
+            "tags" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
               }
             }
           }
+        },
+        "blocked": {
+          "type": "boolean"
+        },
+        "downstream": {
+          "properties": {
+            "connectiontermination": {
+              "type": "boolean"
+            },
+            "directremoteaddress": {
+              "type": "ip"
+            },
+            "directremoteaddressport": {
+              "type": "integer"
+            },
+            "localaddress": {
+              "type": "ip"
+            },
+            "localaddressport": {
+              "type": "integer"
+            },
+            "protocolerror": {
+              "type": "boolean"
+            },
+            "remoteaddress": {
+              "type": "ip"
+            },
+            "remoteaddressport": {
+              "type": "integer"
+            }
+          }
+        },
+        "metadata": {
+          "properties": {
+            "delayinjected": {
+              "type": "boolean"
+            },
+            "failedlocalhealthcheck": {
+              "type": "boolean"
+            },
+            "faultinjected": {
+              "type": "boolean"
+            },
+            "invalidenvoyrequestheaders": {
+              "type": "boolean"
+            },
+            "localreset": {
+              "type": "boolean"
+            },
+            "nohealthyupstream": {
+              "type": "boolean"
+            },
+            "noroutefound": {
+              "type": "boolean"
+            },
+            "ratelimited": {
+              "type": "boolean"
+            },
+            "ratelimitserviceerror": {
+              "type": "boolean"
+            },
+            "routename": {
+              "type": "keyword"
+            },
+            "samplerate": {
+              "type": "float"
+            },
+            "streamidletimeout": {
+              "type": "boolean"
+            },
+            "unauthorizeddetails": {
+              "type": "keyword"
+            }
+          }
+        },
+        "request": {
+          "properties": {
+            "requestid": {
+              "type": "keyword"
+            },
+            "scheme": {
+              "type": "keyword"
+            },
+            "geo" : {
+              "properties" : {
+                "city" : {
+                  "properties" : {
+                    "name" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                },
+                "company" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "continent" : {
+                  "properties" : {
+                    "code" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    },
+                    "name" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                },
+                "country" : {
+                  "properties" : {
+                    "iso" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    },
+                    "name" : {
+                      "type" : "text",
+                      "fields" : {
+                        "keyword" : {
+                          "type" : "keyword",
+                          "ignore_above" : 256
+                        }
+                      }
+                    }
+                  }
+                },
+                "location" : {
+                  "type" : "geo_point",
+                  "ignore_malformed" : true,
+                  "ignore_z_value" : true
+                }
+              }
+            },
+            "arguments": {
+              "type": "flattened"
+            },
+            "attributes" : {
+              "properties" : {
+                "authority" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "ip" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "method" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "path" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "query" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                },
+                "uri" : {
+                  "type" : "text",
+                  "fields" : {
+                    "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
+                    }
+                  }
+                }
+              }
+            },
+            "bodybytes": {
+              "type": "integer"
+            },
+            "cookies": {
+              "type": "flattened"
+            },
+            "eu" : {
+              "type" : "boolean"
+            },
+            "headers": {
+              "properties": {
+                "accept": {
+                  "type": "text"
+                },
+                "accept-charset": {
+                  "type": "text"
+                },
+                "accept-encoding": {
+                  "type": "text"
+                },
+                "accept-language": {
+                  "type": "text"
+                },
+                "apisign_verify_response": {
+                  "type": "text"
+                },
+                "cache-control": {
+                  "type": "text"
+                },
+                "cf-connecting-ip": {
+                  "type": "text"
+                },
+                "channel": {
+                  "type": "text"
+                },
+                "connection": {
+                  "type": "text"
+                },
+                "content-length": {
+                  "type": "text"
+                },
+                "content-type": {
+                  "type": "text"
+                },
+                "device_id": {
+                  "type": "text"
+                },
+                "dispatch_header": {
+                  "type": "text"
+                },
+                "from": {
+                  "type": "text"
+                },
+                "host": {
+                  "type": "text"
+                },
+                "if-modified-since": {
+                  "type": "text"
+                },
+                "if-none-match": {
+                  "type": "text"
+                },
+                "ignore_ym_http_error_all": {
+                  "type": "text"
+                },
+                "is_new_visitor": {
+                  "type": "text"
+                },
+                "lang": {
+                  "type": "text"
+                },
+                "language": {
+                  "type": "text"
+                },
+                "network_type": {
+                  "type": "text"
+                },
+                "now": {
+                  "type": "text"
+                },
+                "origin": {
+                  "type": "text"
+                },
+                "platform": {
+                  "type": "text"
+                },
+                "postman-token": {
+                  "type": "text"
+                },
+                "pragma": {
+                  "type": "text"
+                },
+                "priority": {
+                  "type": "text"
+                },
+                "proxy-authorization": {
+                  "type": "text"
+                },
+                "proxy-connection": {
+                  "type": "text"
+                },
+                "purpose": {
+                  "type": "text"
+                },
+                "referer": {
+                  "type": "text"
+                },
+                "searchpagetype": {
+                  "type": "text"
+                },
+                "sec-ch-ua": {
+                  "type": "text"
+                },
+                "clientip": {
+                  "type": "text"
+                },
+                "client-ip": {
+                  "type": "text"
+                },
+                "sec-ch-ua-mobile": {
+                  "type": "text"
+                },
+                "sec-ch-ua-platform": {
+                  "type": "text"
+                },
+                "sec-fetch-dest": {
+                  "type": "text"
+                },
+                "sec-fetch-mode": {
+                  "type": "text"
+                },
+                "sec-fetch-site": {
+                  "type": "text"
+                },
+                "sec-fetch-user": {
+                  "type": "text"
+                },
+                "sec-gpc": {
+                  "type": "text"
+                },
+                "seller_id": {
+                  "type": "text"
+                },
+                "sign": {
+                  "type": "text"
+                },
+                "source_flag": {
+                  "type": "text"
+                },
+                "stripe-signature": {
+                  "type": "text"
+                },
+                "token": {
+                  "type": "text"
+                },
+                "traceparent": {
+                  "type": "text"
+                },
+                "tracestate": {
+                  "type": "text"
+                },
+                "upgrade-insecure-requests": {
+                  "type": "text"
+                },
+                "user-agent": {
+                  "type": "text"
+                },
+                "ym_id": {
+                  "type": "text"
+                },
+                "x-af-id": {
+                  "type": "text"
+                },
+                "x-android-id": {
+                  "type": "text"
+                },
+                "x-app-name": {
+                  "type": "text"
+                },
+                "x-app-package-name": {
+                  "type": "text"
+                },
+                "x-app-signature": {
+                  "type": "text"
+                },
+                "x-app-type": {
+                  "type": "text"
+                },
+                "x-app-type-v2": {
+                  "type": "text"
+                },
+                "x-app-version": {
+                  "type": "text"
+                },
+                "x-app-version-name": {
+                  "type": "text"
+                },
+                "x-bd-quic": {
+                  "type": "text"
+                },
+                "x-battery": {
+                  "type": "text"
+                },
+                "x-backup-type": {
+                  "type": "text"
+                },
+                "x-b3-traceid": {
+                  "type": "text"
+                },
+                "x-b3-spanid": {
+                  "type": "text"
+                },
+                "x-b3-sampled": {
+                  "type": "text"
+                },
+                "x-b3-parentspanid": {
+                  "type": "text"
+                },
+                "x-b3-flags": {
+                  "type": "text"
+                },
+                "x-bd-traceid": {
+                  "type": "text"
+                },
+                "x-bdboxapp-netengine": {
+                  "type": "text"
+                },
+                "x-boot-ts": {
+                  "type": "text"
+                },
+                "x-brand": {
+                  "type": "text"
+                },
+                "x-brightness": {
+                  "type": "text"
+                },
+                "x-client-ts": {
+                  "type": "text"
+                },
+                "x-country": {
+                  "type": "text"
+                },
+                "x-cuid": {
+                  "type": "text"
+                },
+                "x-dark-mode": {
+                  "type": "text"
+                },
+                "x-datadog-parent-id": {
+                  "type": "text"
+                },
+                "x-datadog-sampling-priority": {
+                  "type": "text"
+                },
+                "x-datadog-tags": {
+                  "type": "text"
+                },
+                "x-datadog-trace-id": {
+                  "type": "text"
+                },
+                "x-forwarded-for": {
+                  "type": "text"
+                },
+                "x-from-h3-trnet": {
+                  "type": "text"
+                },
+                "x-ga-id": {
+                  "type": "text"
+                },
+                "x-gp-available": {
+                  "type": "text"
+                },
+                "x-language": {
+                  "type": "text"
+                },
+                "x-model": {
+                  "type": "text"
+                },
+                "x-network-state": {
+                  "type": "text"
+                },
+                "x-os-version": {
+                  "type": "text"
+                },
+                "x-playstore": {
+                  "type": "text"
+                },
+                "x-real-ip": {
+                  "type": "text"
+                },
+                "x-referrer": {
+                  "type": "text"
+                },
+                "x-request-id": {
+                  "type": "text"
+                },
+                "x-requested-with": {
+                  "type": "text"
+                },
+                "x-sdk": {
+                  "type": "text"
+                },
+                "x-sim-operator": {
+                  "type": "text"
+                },
+                "x-sk": {
+                  "type": "text"
+                },
+                "x-t5-auth": {
+                  "type": "text"
+                },
+                "x-turbonet-info": {
+                  "type": "text"
+                },
+                "x-ucbrowser-ua": {
+                  "type": "text"
+                },
+                "x-wap-profile": {
+                  "type": "text"
+                },
+                "x-xsrf-token": {
+                  "type": "text"
+                },
+                "y_language": {
+                  "type": "text"
+                },
+                "y_nonce": {
+                  "type": "text"
+                },
+                "y_platform": {
+                  "type": "text"
+                },
+                "y_secretid": {
+                  "type": "text"
+                },
+                "y_signature": {
+                  "type": "text"
+                },
+                "y_timestamp": {
+                  "type": "text"
+                },
+                "y_timezone": {
+                  "type": "text"
+                },
+                "zeus-pagetype": {
+                  "type": "text"
+                },
+                "y_version": {
+                  "type": "integer"
+                }
+              }
+            },
+            "headersbytes": {
+              "type": "integer"
+            },
+            "originalpath": {
+              "type": "keyword"
+            }
+          }
+        },
+        "response": {
+          "properties": {
+            "bodybytes": {
+              "type": "integer"
+            },
+            "code": {
+              "type": "integer"
+            },
+            "codedetails": {
+              "type": "keyword"
+            },
+            "headers": {
+              "type": "flattened"
+            },
+            "headersbytes": {
+              "type": "integer"
+            },
+            "trailers": {
+              "type": "keyword"
+            }
+          }
+        },
+        "rx_timers" : {
+          "properties" : {
+            "firstupstreambyte" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            },
+            "lastbyte" : {
+              "type" : "long"
+            },
+            "lastupstreambyte" : {
+              "type" : "text",
+              "fields" : {
+                "keyword" : {
+                  "type" : "keyword",
+                  "ignore_above" : 256
+                }
+              }
+            }
+          }
+        },
+        "rxtimers" : {
+          "properties" : {
+            "firstupstreambyte" : {
+              "type" : "float"
+            },
+            "lastbyte" : {
+              "type" : "float"
+            },
+            "lastupstreambyte" : {
+              "type" : "float"
+            }
+          }
+        },
+        "tags": {
+          "type": "keyword"
+        },
+        "@timestamp": {
+          "type": "date_nanos"
+        },
+        "tls": {
+          "properties": {
+            "ciphersuite": {
+              "type": "keyword"
+            },
+            "sessionid": {
+              "type": "keyword"
+            },
+            "snihostname": {
+              "type": "keyword"
+            },
+            "version": {
+              "type": "keyword"
+            }
+          }
+        },
+        "txtimers": {
+          "properties": {
+            "firstdownstreambyte": {
+              "type": "float"
+            },
+            "firstupstreambyte": {
+              "type": "float"
+            },
+            "lastdownstreambyte": {
+              "type": "float"
+            },
+            "lastupstreambyte": {
+              "type": "float"
+            }
+          }
+        },
+        "upstream": {
+          "properties": {
+            "cluster": {
+              "type": "keyword"
+            },
+            "connectionfailure": {
+              "type": "boolean"
+            },
+            "connectiontermination": {
+              "type": "boolean"
+            },
+            "localaddress": {
+              "type": "ip"
+            },
+            "localaddressport": {
+              "type": "integer"
+            },
+            "overflow": {
+              "type": "boolean"
+            },
+            "remoteaddress": {
+              "type": "ip"
+            },
+            "remoteaddressport": {
+              "type": "integer"
+            },
+            "remotereset": {
+              "type": "boolean"
+            },
+            "requesttimeout": {
+              "type": "boolean"
+            },
+            "retrylimitexceeded": {
+              "type": "boolean"
+            },
+            "transportfailurereason": {
+              "type": "keyword"
+            }
+          }
         }
-      },
-      "aliases": {}
-    }
+      }
+    },
+    "aliases": {}
+  }
 }
