@@ -12,7 +12,7 @@
         "lifecycle": {
           "name": "yami-curieaccesslog",
           "rollover_alias": "yami-curieaccesslog"
-        }
+        },
         "highlight" : {
           "max_analyzed_offset" : "100000000"
         },
